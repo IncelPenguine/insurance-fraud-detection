@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,14 +18,18 @@
             background-color: #F8F7F4;
             color: #4A4A4A;
         }
+
         .nav-link {
             transition: color 0.3s, border-bottom-color 0.3s;
             border-bottom: 2px solid transparent;
         }
-        .nav-link.active, .nav-link:hover {
+
+        .nav-link.active,
+        .nav-link:hover {
             color: #A57C52;
             border-bottom-color: #A57C52;
         }
+
         .chart-container {
             position: relative;
             width: 100%;
@@ -34,31 +39,38 @@
             height: 350px;
             max-height: 50vh;
         }
+
         .kpi-card {
             background-color: #FFFFFF;
             border: 1px solid #EAEAEA;
             transition: transform 0.3s, box-shadow 0.3s;
         }
+
         .kpi-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
+
         .model-btn {
             transition: background-color 0.3s, color 0.3s, transform 0.2s;
         }
+
         .model-btn.active {
             background-color: #8D9B87;
             color: #FFFFFF;
             transform: scale(1.05);
         }
+
         section {
             display: none;
         }
+
         section.active {
             display: block;
         }
     </style>
 </head>
+
 <body class="antialiased">
 
     <header class="bg-white shadow-md sticky top-0 z-50">
@@ -69,6 +81,11 @@
                 <li><a href="#performance" class="nav-link font-medium pb-1">Model Performance</a></li>
                 <li><a href="#interpretability" class="nav-link font-medium pb-1">Interpretability</a></li>
                 <li><a href="#conclusion" class="nav-link font-medium pb-1">Conclusion</a></li>
+                <!-- Link to GitHub Profile -->
+                <li><a href="https://github.com/IncelPenguine" target="_blank" class="nav-link font-medium pb-1">
+                        My
+                        GitHub
+                        Profile</a></li>
             </ul>
         </nav>
     </header>
@@ -78,9 +95,10 @@
         <section id="overview" class="active">
             <div class="text-center mb-12">
                 <h1 class="text-4xl md:text-5xl font-bold text-[#8D9B87] mb-4">Insurance Fraud Detection Model</h1>
-                <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">An interactive dashboard summarizing the findings from an end-to-end machine learning project to identify fraudulent insurance claims.</p>
+                <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">An interactive dashboard summarizing the
+                    findings from an end-to-end machine learning project to identify fraudulent insurance claims.</p>
             </div>
-            
+
             <div class="mb-12">
                 <h2 class="text-2xl font-bold text-center mb-6 text-gray-700">Project at a Glance</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -102,14 +120,15 @@
             <div>
                 <h2 class="text-2xl font-bold text-center mb-6 text-gray-700">Project Workflow</h2>
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                    <p class="text-gray-600 mb-4 text-center">This project followed a standard data science lifecycle, from data exploration to model deployment insights.</p>
+                    <p class="text-gray-600 mb-4 text-center">This project followed a standard data science lifecycle,
+                        from data exploration to model deployment insights.</p>
                     <div class="flex flex-wrap justify-center items-center gap-4 md:gap-6 text-sm md:text-base">
                         <div class="bg-[#F8F7F4] p-3 rounded-lg font-medium">1. Data Exploration & Cleaning</div>
                         <span class="text-gray-400 font-light">→</span>
                         <div class="bg-[#F8F7F4] p-3 rounded-lg font-medium">2. Feature Engineering</div>
                         <span class="text-gray-400 font-light">→</span>
                         <div class="bg-[#F8F7F4] p-3 rounded-lg font-medium">3. Model Training & Tuning</div>
-                         <span class="text-gray-400 font-light">→</span>
+                        <span class="text-gray-400 font-light">→</span>
                         <div class="bg-[#F8F7F4] p-3 rounded-lg font-medium">4. Evaluation & Interpretability</div>
                     </div>
                 </div>
@@ -117,14 +136,18 @@
         </section>
 
         <section id="exploration">
-             <div class="text-center mb-12">
+            <div class="text-center mb-12">
                 <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">Data Exploration</h1>
-                <p class="text-lg text-gray-600 max-w-3xl mx-auto">This section provides insights from the Exploratory Data Analysis (EDA). The goal was to understand data distributions, patterns, and relationships to inform feature engineering and modeling. Select a chart from the dropdown to explore different aspects of the dataset.</p>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">This section provides insights from the Exploratory
+                    Data Analysis (EDA). The goal was to understand data distributions, patterns, and relationships to
+                    inform feature engineering and modeling. Select a chart from the dropdown to explore different
+                    aspects of the dataset.</p>
             </div>
 
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
                 <div class="flex justify-center mb-6">
-                    <select id="edaChartSelector" class="p-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-[#8D9B87] focus:border-[#8D9B87]">
+                    <select id="edaChartSelector"
+                        class="p-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-[#8D9B87] focus:border-[#8D9B87]">
                         <option value="fraudDistribution" selected>Fraud Distribution</option>
                         <option value="ageDistribution">Policyholder Age Distribution</option>
                         <option value="claimByIncidentType">Average Claim by Incident Type</option>
@@ -139,24 +162,32 @@
         <section id="performance">
             <div class="text-center mb-12">
                 <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">Model Performance Comparison</h1>
-                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Here, we evaluate and compare the performance of three different classification models. For fraud detection, we prioritize metrics like **Recall** (to catch as many fraud cases as possible) and **F1-Score** (to balance recall with precision). Select a model to view its detailed performance metrics.</p>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Here, we evaluate and compare the performance of
+                    three different classification models. For fraud detection, we prioritize metrics like **Recall**
+                    (to catch as many fraud cases as possible) and **F1-Score** (to balance recall with precision).
+                    Select a model to view its detailed performance metrics.</p>
             </div>
-            
+
             <div class="flex justify-center mb-8 space-x-2 md:space-x-4">
-                <button class="model-btn active px-4 py-2 rounded-full font-semibold bg-gray-200" data-model="XGBoost">XGBoost</button>
-                <button class="model-btn px-4 py-2 rounded-full font-semibold bg-gray-200" data-model="RandomForest">Random Forest</button>
-                <button class="model-btn px-4 py-2 rounded-full font-semibold bg-gray-200" data-model="LogisticRegression">Logistic Regression</button>
+                <button class="model-btn active px-4 py-2 rounded-full font-semibold bg-gray-200"
+                    data-model="XGBoost">XGBoost</button>
+                <button class="model-btn px-4 py-2 rounded-full font-semibold bg-gray-200"
+                    data-model="RandomForest">Random Forest</button>
+                <button class="model-btn px-4 py-2 rounded-full font-semibold bg-gray-200"
+                    data-model="LogisticRegression">Logistic Regression</button>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                     <h3 id="metricsTitle" class="text-xl font-bold text-center mb-4 text-gray-700">XGBoost Performance Metrics</h3>
+                    <h3 id="metricsTitle" class="text-xl font-bold text-center mb-4 text-gray-700">XGBoost Performance
+                        Metrics</h3>
                     <div class="chart-container" style="height:300px; max-height:40vh;">
-                         <canvas id="performanceChart"></canvas>
+                        <canvas id="performanceChart"></canvas>
                     </div>
                 </div>
-                 <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                    <h3 id="matrixTitle" class="text-xl font-bold text-center mb-4 text-gray-700">XGBoost Confusion Matrix</h3>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                    <h3 id="matrixTitle" class="text-xl font-bold text-center mb-4 text-gray-700">XGBoost Confusion
+                        Matrix</h3>
                     <div class="flex justify-center items-center">
                         <div class="grid grid-cols-3 gap-1 text-center text-sm">
                             <div></div>
@@ -177,65 +208,89 @@
         <section id="interpretability">
             <div class="text-center mb-12">
                 <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">Model Interpretability with SHAP</h1>
-                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Understanding *why* a model makes its predictions is crucial for trust and actionable insights. We used SHAP (SHapley Additive exPlanations) to determine which features have the most impact on fraud prediction for the best-performing model (XGBoost).</p>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Understanding *why* a model makes its predictions is
+                    crucial for trust and actionable insights. We used SHAP (SHapley Additive exPlanations) to determine
+                    which features have the most impact on fraud prediction for the best-performing model (XGBoost).</p>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                 <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                    <h3 class="text-xl font-bold text-center mb-4 text-gray-700">Top Features Driving Fraud Prediction</h3>
-                     <div class="chart-container" style="height:400px; max-height:60vh;">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-bold text-center mb-4 text-gray-700">Top Features Driving Fraud Prediction
+                    </h3>
+                    <div class="chart-container" style="height:400px; max-height:60vh;">
                         <canvas id="shapChart"></canvas>
                     </div>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                    <h3 class="text-xl font-bold text-center mb-4 text-gray-700">How Top Features Influence Predictions</h3>
+                    <h3 class="text-xl font-bold text-center mb-4 text-gray-700">How Top Features Influence Predictions
+                    </h3>
                     <div class="space-y-4 text-gray-700">
-                        <p>Based on SHAP beeswarm plot analysis (not shown here), we can interpret the influence of the top features:</p>
+                        <p>Based on SHAP beeswarm plot analysis (not shown here), we can interpret the influence of the
+                            top features:</p>
                         <div class="p-4 bg-gray-50 rounded-lg">
-                           <h4 class="font-semibold text-[#8D9B87]">Incident Severity</h4>
-                           <p>Higher severity incidents (e.g., 'Major Damage', 'Total Loss') strongly increase the likelihood of a fraud prediction. This is the most significant driver.</p>
+                            <h4 class="font-semibold text-[#8D9B87]">Incident Severity</h4>
+                            <p>Higher severity incidents (e.g., 'Major Damage', 'Total Loss') strongly increase the
+                                likelihood of a fraud prediction. This is the most significant driver.</p>
                         </div>
-                         <div class="p-4 bg-gray-50 rounded-lg">
-                           <h4 class="font-semibold text-[#8D9B87]">Insured Hobbies</h4>
-                           <p>Certain hobbies, like 'chess' and 'cross-fit' in this synthetic dataset, were surprisingly strong predictors, pushing predictions towards fraud. This highlights how models can find non-obvious correlations.</p>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-semibold text-[#8D9B87]">Insured Hobbies</h4>
+                            <p>Certain hobbies, like 'chess' and 'cross-fit' in this synthetic dataset, were
+                                surprisingly strong predictors, pushing predictions towards fraud. This highlights how
+                                models can find non-obvious correlations.</p>
                         </div>
-                         <div class="p-4 bg-gray-50 rounded-lg">
-                           <h4 class="font-semibold text-[#8D9B87]">Policy Annual Premium</h4>
-                           <p>Higher annual premiums tend to be associated with non-fraudulent claims (pushing SHAP values lower), whereas lower premiums are associated with a higher likelihood of fraud.</p>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-semibold text-[#8D9B87]">Policy Annual Premium</h4>
+                            <p>Higher annual premiums tend to be associated with non-fraudulent claims (pushing SHAP
+                                values lower), whereas lower premiums are associated with a higher likelihood of fraud.
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        
+
         <section id="conclusion">
             <div class="text-center mb-12">
                 <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">Conclusion & Business Impact</h1>
-                <p class="text-lg text-gray-600 max-w-3xl mx-auto">This project successfully demonstrates a data-driven approach to a critical business problem, providing a blueprint for real-world applications in the insurance industry.</p>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">This project successfully demonstrates a data-driven
+                    approach to a critical business problem, providing a blueprint for real-world applications in the
+                    insurance industry.</p>
             </div>
-             <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 max-w-4xl mx-auto">
-                 <div class="space-y-6 text-gray-700">
-                     <div>
+            <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 max-w-4xl mx-auto">
+                <div class="space-y-6 text-gray-700">
+                    <div>
                         <h3 class="text-xl font-bold text-[#8D9B87] mb-2">Project Summary</h3>
-                        <p>An end-to-end pipeline was built to clean, explore, and model insurance claims data. After comparing Logistic Regression, Random Forest, and XGBoost, the **XGBoost model, enhanced with hyperparameter tuning and SMOTE for imbalance**, proved to be the most effective and balanced solution for detecting fraudulent claims.</p>
+                        <p>An end-to-end pipeline was built to clean, explore, and model insurance claims data. After
+                            comparing Logistic Regression, Random Forest, and XGBoost, the **XGBoost model, enhanced
+                            with hyperparameter tuning and SMOTE for imbalance**, proved to be the most effective and
+                            balanced solution for detecting fraudulent claims.</p>
                     </div>
                     <div>
                         <h3 class="text-xl font-bold text-[#8D9B87] mb-2">Business Insights & Use Cases</h3>
-                         <ul class="list-disc list-inside space-y-2">
-                             <li><strong class="font-semibold">Automated Risk Scoring:</strong> The model can be deployed to score incoming claims in real-time, allowing fraud investigation units to prioritize high-risk cases and fast-track low-risk ones.</li>
-                             <li><strong class="font-semibold">Resource Optimization:</strong> By automating the initial screening, the model enables claims handlers and investigators to focus their efforts where they are most needed, significantly improving operational efficiency.</li>
-                              <li><strong class="font-semibold">Improved Loss Ratios:</strong> By more accurately identifying and preventing fraudulent payouts, the model can directly improve the insurer's loss ratio and overall profitability.</li>
-                         </ul>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong class="font-semibold">Automated Risk Scoring:</strong> The model can be deployed
+                                to score incoming claims in real-time, allowing fraud investigation units to prioritize
+                                high-risk cases and fast-track low-risk ones.</li>
+                            <li><strong class="font-semibold">Resource Optimization:</strong> By automating the initial
+                                screening, the model enables claims handlers and investigators to focus their efforts
+                                where they are most needed, significantly improving operational efficiency.</li>
+                            <li><strong class="font-semibold">Improved Loss Ratios:</strong> By more accurately
+                                identifying and preventing fraudulent payouts, the model can directly improve the
+                                insurer's loss ratio and overall profitability.</li>
+                        </ul>
                     </div>
-                     <div>
+                    <div>
                         <h3 class="text-xl font-bold text-[#8D9B87] mb-2">Future Improvements</h3>
-                         <ul class="list-disc list-inside space-y-2">
-                             <li>Model claim severity (`total_claim_amount`) using specialized regression models like Tweedie GLM.</li>
-                             <li>Develop a user-friendly front-end interface (e.g., using Streamlit) for interactive risk scoring.</li>
-                             <li>Incorporate text analysis on claim descriptions to capture more nuanced fraud indicators.</li>
-                         </ul>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li>Model claim severity (`total_claim_amount`) using specialized regression models like
+                                Tweedie GLM.</li>
+                            <li>Develop a user-friendly front-end interface (e.g., using Streamlit) for interactive risk
+                                scoring.</li>
+                            <li>Incorporate text analysis on claim descriptions to capture more nuanced fraud
+                                indicators.</li>
+                        </ul>
                     </div>
-                 </div>
-             </div>
+                </div>
+            </div>
         </section>
 
     </main>
@@ -281,7 +336,7 @@
                     RandomForest: {
                         metrics: {
                             labels: ['Precision', 'Recall', 'F1-Score'],
-                             datasets: [
+                            datasets: [
                                 { label: 'Not Fraud', data: [0.81, 0.92, 0.86], backgroundColor: '#8D9B87' },
                                 { label: 'Fraud', data: [0.59, 0.35, 0.44], backgroundColor: '#D4A373' }
                             ]
@@ -291,7 +346,7 @@
                     XGBoost: {
                         metrics: {
                             labels: ['Precision', 'Recall', 'F1-Score'],
-                             datasets: [
+                            datasets: [
                                 { label: 'Not Fraud', data: [0.88, 0.89, 0.88], backgroundColor: '#8D9B87' },
                                 { label: 'Fraud', data: [0.65, 0.63, 0.64], backgroundColor: '#D4A373' }
                             ]
@@ -335,7 +390,7 @@
                             },
                             tooltip: {
                                 callbacks: {
-                                    label: function(context) {
+                                    label: function (context) {
                                         let label = context.dataset.label || '';
                                         if (label) {
                                             label += ': ';
@@ -384,14 +439,14 @@
                 const modelData = appData.models[modelName];
 
                 if (performanceChartInstance) performanceChartInstance.destroy();
-                
+
                 performanceChartInstance = createChart(performanceCtx, {
                     type: 'bar',
                     labels: modelData.metrics.labels,
                     datasets: modelData.metrics.datasets,
                     title: `${modelName} Performance Metrics`,
                 });
-                
+
                 document.getElementById('metricsTitle').innerText = `${modelName} Performance Metrics`;
                 document.getElementById('matrixTitle').innerText = `${modelName} Confusion Matrix`;
 
@@ -405,7 +460,7 @@
                     btn.classList.toggle('active', btn.dataset.model === modelName);
                 });
             }
-            
+
             function renderShapChart() {
                 if (shapChartInstance) shapChartInstance.destroy();
                 shapChartInstance = createChart(shapCtx, {
@@ -422,7 +477,7 @@
             document.getElementById('edaChartSelector').addEventListener('change', (e) => {
                 updateEdaChart(e.target.value);
             });
-            
+
             document.querySelectorAll('.model-btn').forEach(btn => {
                 btn.addEventListener('click', () => updatePerformanceView(btn.dataset.model));
             });
@@ -431,13 +486,13 @@
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
                     const targetId = link.getAttribute('href').substring(1);
-                    
+
                     document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
                     document.getElementById(targetId).classList.add('active');
-                    
+
                     document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active'));
                     link.classList.add('active');
-                    
+
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
             });
@@ -450,4 +505,5 @@
         });
     </script>
 </body>
+
 </html>
