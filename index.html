@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Report: Insurance Fraud Detection Model</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Earthy Calm -->
+    <!-- Application Structure Plan: A single-page dashboard application with a top navigation bar to jump between thematic sections. The sections will be: 1. Overview & KPIs (key metrics like fraud rate). 2. Interactive Data Exploration (EDA charts). 3. Model Performance Comparison (interactive view of Logistic Regression, Random Forest, XGBoost results). 4. Model Interpretability (SHAP feature importance). 5. Business Impact & Conclusion. This structure guides the user from a high-level summary to detailed findings and finally to actionable insights, which is more intuitive for business and technical stakeholders than a linear notebook format. -->
+    <!-- Visualization & Content Choices: 1. KPIs: Simple HTML/CSS cards to inform users instantly. 2. Data Exploration: Chart.js bar charts for distributions, chosen for clarity and familiarity. Interaction via a dropdown to switch charts, promoting focused exploration. 3. Model Comparison: Interactive bar chart (Chart.js) and HTML grid for confusion matrices. Buttons will trigger JS to update these elements, allowing direct comparison of model strengths (e.g., XGBoost's balanced F1 vs. RF's recall). 4. SHAP Insights: Horizontal bar chart (Chart.js) to clearly rank feature importance, which is the primary goal of this section. Text summaries will explain the beeswarm plot findings without needing the complex visualization itself. This approach adheres to the NO SVG/Mermaid rule and uses Canvas-based charts for all dynamic data visualizations. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F7F4;
+            color: #4A4A4A;
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link.active, .nav-link:hover {
+            color: #A57C52;
+            border-bottom-color: #A57C52;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 50vh;
+        }
+        .kpi-card {
+            background-color: #FFFFFF;
+            border: 1px solid #EAEAEA;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .model-btn {
+            transition: background-color 0.3s, color 0.3s, transform 0.2s;
+        }
+        .model-btn.active {
+            background-color: #8D9B87;
+            color: #FFFFFF;
+            transform: scale(1.05);
+        }
+        section {
+            display: none;
+        }
+        section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4">
+            <ul class="flex justify-center space-x-6 md:space-x-10 text-sm md:text-base">
+                <li><a href="#overview" class="nav-link active font-medium pb-1">Overview</a></li>
+                <li><a href="#exploration" class="nav-link font-medium pb-1">Data Exploration</a></li>
+                <li><a href="#performance" class="nav-link font-medium pb-1">Model Performance</a></li>
+                <li><a href="#interpretability" class="nav-link font-medium pb-1">Interpretability</a></li>
+                <li><a href="#conclusion" class="nav-link font-medium pb-1">Conclusion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <section id="overview" class="active">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl md:text-5xl font-bold text-[#8D9B87] mb-4">Insurance Fraud Detection Model</h1>
+                <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">An interactive dashboard summarizing the findings from an end-to-end machine learning project to identify fraudulent insurance claims.</p>
+            </div>
+            
+            <div class="mb-12">
+                <h2 class="text-2xl font-bold text-center mb-6 text-gray-700">Project at a Glance</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="kpi-card p-6 rounded-xl text-center">
+                        <h3 class="text-lg font-semibold text-gray-500 mb-2">Total Claims Analyzed</h3>
+                        <p class="text-5xl font-bold text-[#8D9B87]">1,000</p>
+                    </div>
+                    <div class="kpi-card p-6 rounded-xl text-center">
+                        <h3 class="text-lg font-semibold text-gray-500 mb-2">Observed Fraud Rate</h3>
+                        <p class="text-5xl font-bold text-[#D4A373]">24.7%</p>
+                    </div>
+                    <div class="kpi-card p-6 rounded-xl text-center">
+                        <h3 class="text-lg font-semibold text-gray-500 mb-2">Best Model F1-Score (Fraud)</h3>
+                        <p class="text-5xl font-bold text-[#8D9B87]">0.64</p>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-2xl font-bold text-center mb-6 text-gray-700">Project Workflow</h2>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                    <p class="text-gray-600 mb-4 text-center">This project followed a standard data science lifecycle, from data exploration to model deployment insights.</p>
+                    <div class="flex flex-wrap justify-center items-center gap-4 md:gap-6 text-sm md:text-base">
+                        <div class="bg-[#F8F7F4] p-3 rounded-lg font-medium">1. Data Exploration & Cleaning</div>
+                        <span class="text-gray-400 font-light">→</span>
+                        <div class="bg-[#F8F7F4] p-3 rounded-lg font-medium">2. Feature Engineering</div>
+                        <span class="text-gray-400 font-light">→</span>
+                        <div class="bg-[#F8F7F4] p-3 rounded-lg font-medium">3. Model Training & Tuning</div>
+                         <span class="text-gray-400 font-light">→</span>
+                        <div class="bg-[#F8F7F4] p-3 rounded-lg font-medium">4. Evaluation & Interpretability</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="exploration">
+             <div class="text-center mb-12">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">Data Exploration</h1>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">This section provides insights from the Exploratory Data Analysis (EDA). The goal was to understand data distributions, patterns, and relationships to inform feature engineering and modeling. Select a chart from the dropdown to explore different aspects of the dataset.</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <div class="flex justify-center mb-6">
+                    <select id="edaChartSelector" class="p-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-[#8D9B87] focus:border-[#8D9B87]">
+                        <option value="fraudDistribution" selected>Fraud Distribution</option>
+                        <option value="ageDistribution">Policyholder Age Distribution</option>
+                        <option value="claimByIncidentType">Average Claim by Incident Type</option>
+                    </select>
+                </div>
+                <div class="chart-container">
+                    <canvas id="edaChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="performance">
+            <div class="text-center mb-12">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">Model Performance Comparison</h1>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Here, we evaluate and compare the performance of three different classification models. For fraud detection, we prioritize metrics like **Recall** (to catch as many fraud cases as possible) and **F1-Score** (to balance recall with precision). Select a model to view its detailed performance metrics.</p>
+            </div>
+            
+            <div class="flex justify-center mb-8 space-x-2 md:space-x-4">
+                <button class="model-btn active px-4 py-2 rounded-full font-semibold bg-gray-200" data-model="XGBoost">XGBoost</button>
+                <button class="model-btn px-4 py-2 rounded-full font-semibold bg-gray-200" data-model="RandomForest">Random Forest</button>
+                <button class="model-btn px-4 py-2 rounded-full font-semibold bg-gray-200" data-model="LogisticRegression">Logistic Regression</button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                     <h3 id="metricsTitle" class="text-xl font-bold text-center mb-4 text-gray-700">XGBoost Performance Metrics</h3>
+                    <div class="chart-container" style="height:300px; max-height:40vh;">
+                         <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
+                 <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                    <h3 id="matrixTitle" class="text-xl font-bold text-center mb-4 text-gray-700">XGBoost Confusion Matrix</h3>
+                    <div class="flex justify-center items-center">
+                        <div class="grid grid-cols-3 gap-1 text-center text-sm">
+                            <div></div>
+                            <div class="font-bold py-1">Predicted Not Fraud</div>
+                            <div class="font-bold py-1">Predicted Fraud</div>
+                            <div class="font-bold text-right pr-2 py-4">Actual Not Fraud</div>
+                            <div id="tn" class="bg-green-100 text-green-800 p-4 rounded-lg font-bold text-2xl">0</div>
+                            <div id="fp" class="bg-red-100 text-red-800 p-4 rounded-lg font-bold text-2xl">0</div>
+                            <div class="font-bold text-right pr-2 py-4">Actual Fraud</div>
+                            <div id="fn" class="bg-red-100 text-red-800 p-4 rounded-lg font-bold text-2xl">0</div>
+                            <div id="tp" class="bg-green-100 text-green-800 p-4 rounded-lg font-bold text-2xl">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="interpretability">
+            <div class="text-center mb-12">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">Model Interpretability with SHAP</h1>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Understanding *why* a model makes its predictions is crucial for trust and actionable insights. We used SHAP (SHapley Additive exPlanations) to determine which features have the most impact on fraud prediction for the best-performing model (XGBoost).</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                 <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-bold text-center mb-4 text-gray-700">Top Features Driving Fraud Prediction</h3>
+                     <div class="chart-container" style="height:400px; max-height:60vh;">
+                        <canvas id="shapChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-bold text-center mb-4 text-gray-700">How Top Features Influence Predictions</h3>
+                    <div class="space-y-4 text-gray-700">
+                        <p>Based on SHAP beeswarm plot analysis (not shown here), we can interpret the influence of the top features:</p>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                           <h4 class="font-semibold text-[#8D9B87]">Incident Severity</h4>
+                           <p>Higher severity incidents (e.g., 'Major Damage', 'Total Loss') strongly increase the likelihood of a fraud prediction. This is the most significant driver.</p>
+                        </div>
+                         <div class="p-4 bg-gray-50 rounded-lg">
+                           <h4 class="font-semibold text-[#8D9B87]">Insured Hobbies</h4>
+                           <p>Certain hobbies, like 'chess' and 'cross-fit' in this synthetic dataset, were surprisingly strong predictors, pushing predictions towards fraud. This highlights how models can find non-obvious correlations.</p>
+                        </div>
+                         <div class="p-4 bg-gray-50 rounded-lg">
+                           <h4 class="font-semibold text-[#8D9B87]">Policy Annual Premium</h4>
+                           <p>Higher annual premiums tend to be associated with non-fraudulent claims (pushing SHAP values lower), whereas lower premiums are associated with a higher likelihood of fraud.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="conclusion">
+            <div class="text-center mb-12">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">Conclusion & Business Impact</h1>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">This project successfully demonstrates a data-driven approach to a critical business problem, providing a blueprint for real-world applications in the insurance industry.</p>
+            </div>
+             <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 max-w-4xl mx-auto">
+                 <div class="space-y-6 text-gray-700">
+                     <div>
+                        <h3 class="text-xl font-bold text-[#8D9B87] mb-2">Project Summary</h3>
+                        <p>An end-to-end pipeline was built to clean, explore, and model insurance claims data. After comparing Logistic Regression, Random Forest, and XGBoost, the **XGBoost model, enhanced with hyperparameter tuning and SMOTE for imbalance**, proved to be the most effective and balanced solution for detecting fraudulent claims.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-[#8D9B87] mb-2">Business Insights & Use Cases</h3>
+                         <ul class="list-disc list-inside space-y-2">
+                             <li><strong class="font-semibold">Automated Risk Scoring:</strong> The model can be deployed to score incoming claims in real-time, allowing fraud investigation units to prioritize high-risk cases and fast-track low-risk ones.</li>
+                             <li><strong class="font-semibold">Resource Optimization:</strong> By automating the initial screening, the model enables claims handlers and investigators to focus their efforts where they are most needed, significantly improving operational efficiency.</li>
+                              <li><strong class="font-semibold">Improved Loss Ratios:</strong> By more accurately identifying and preventing fraudulent payouts, the model can directly improve the insurer's loss ratio and overall profitability.</li>
+                         </ul>
+                    </div>
+                     <div>
+                        <h3 class="text-xl font-bold text-[#8D9B87] mb-2">Future Improvements</h3>
+                         <ul class="list-disc list-inside space-y-2">
+                             <li>Model claim severity (`total_claim_amount`) using specialized regression models like Tweedie GLM.</li>
+                             <li>Develop a user-friendly front-end interface (e.g., using Streamlit) for interactive risk scoring.</li>
+                             <li>Incorporate text analysis on claim descriptions to capture more nuanced fraud indicators.</li>
+                         </ul>
+                    </div>
+                 </div>
+             </div>
+        </section>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const appData = {
+                eda: {
+                    fraudDistribution: {
+                        type: 'bar',
+                        labels: ['Not Fraud', 'Fraud'],
+                        data: [753, 247],
+                        backgroundColor: ['#8D9B87', '#D4A373'],
+                        title: 'Fraud vs. Non-Fraud Claims Distribution'
+                    },
+                    ageDistribution: {
+                        type: 'bar',
+                        labels: ['19-25', '26-30', '31-35', '36-40', '41-45', '46-50', '51-55', '56-60', '61-65'],
+                        data: [72, 226, 227, 230, 142, 82, 36, 38, 17],
+                        backgroundColor: '#8D9B87',
+                        title: 'Distribution of Policyholder Age'
+                    },
+                    claimByIncidentType: {
+                        type: 'bar',
+                        labels: ['Multi-vehicle Collision', 'Single Vehicle Collision', 'Parked Car', 'Vehicle Theft'],
+                        data: [61637, 64445, 5308, 5517],
+                        backgroundColor: ['#8D9B87', '#A57C52', '#C3B091', '#D4A373'],
+                        title: 'Average Claim Amount by Incident Type'
+                    }
+                },
+                models: {
+                    LogisticRegression: {
+                        metrics: {
+                            labels: ['Precision', 'Recall', 'F1-Score'],
+                            datasets: [
+                                { label: 'Not Fraud', data: [0.75, 0.99, 0.86], backgroundColor: '#8D9B87' },
+                                { label: 'Fraud', data: [0.00, 0.00, 0.00], backgroundColor: '#D4A373' }
+                            ]
+                        },
+                        confusionMatrix: { tn: 150, fp: 1, fn: 49, tp: 0 }
+                    },
+                    RandomForest: {
+                        metrics: {
+                            labels: ['Precision', 'Recall', 'F1-Score'],
+                             datasets: [
+                                { label: 'Not Fraud', data: [0.81, 0.92, 0.86], backgroundColor: '#8D9B87' },
+                                { label: 'Fraud', data: [0.59, 0.35, 0.44], backgroundColor: '#D4A373' }
+                            ]
+                        },
+                        confusionMatrix: { tn: 139, fp: 12, fn: 32, tp: 17 }
+                    },
+                    XGBoost: {
+                        metrics: {
+                            labels: ['Precision', 'Recall', 'F1-Score'],
+                             datasets: [
+                                { label: 'Not Fraud', data: [0.88, 0.89, 0.88], backgroundColor: '#8D9B87' },
+                                { label: 'Fraud', data: [0.65, 0.63, 0.64], backgroundColor: '#D4A373' }
+                            ]
+                        },
+                        confusionMatrix: { tn: 134, fp: 17, fn: 18, tp: 31 }
+                    }
+                },
+                shap: {
+                    labels: ['Incident Severity', 'Insured Hobbies', 'Insured Zip', 'Auto Year', 'Incident Hour', 'Injury Claim', 'Policy Premium', 'Claim Severity'],
+                    data: [2.1, 1.1, 0.4, 0.35, 0.3, 0.28, 0.27, 0.26]
+                }
+            };
+
+            let edaChartInstance, performanceChartInstance, shapChartInstance;
+
+            const createChart = (ctx, config) => {
+                return new Chart(ctx, {
+                    type: config.type,
+                    data: {
+                        labels: config.labels,
+                        datasets: config.datasets || [{
+                            label: config.label || '',
+                            data: config.data,
+                            backgroundColor: config.backgroundColor,
+                            borderColor: config.borderColor,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                display: config.type !== 'horizontalBar' && config.datasets,
+                            },
+                            title: {
+                                display: true,
+                                text: config.title,
+                                font: { size: 16, weight: 'bold' }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += context.parsed.y;
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        scales: config.type.includes('bar') ? {
+                            x: {
+                                grid: { display: false },
+                                title: { display: !!config.xLabel, text: config.xLabel }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: '#EAEAEA' },
+                                title: { display: !!config.yLabel, text: config.yLabel }
+                            }
+                        } : {},
+                        indexAxis: config.indexAxis || 'x',
+                    }
+                });
+            };
+
+            const edaCtx = document.getElementById('edaChart').getContext('2d');
+            const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+            const shapCtx = document.getElementById('shapChart').getContext('2d');
+
+            function updateEdaChart(chartId) {
+                if (edaChartInstance) edaChartInstance.destroy();
+                const chartData = appData.eda[chartId];
+                edaChartInstance = createChart(edaCtx, {
+                    type: chartData.type,
+                    labels: chartData.labels,
+                    data: chartData.data,
+                    backgroundColor: chartData.backgroundColor,
+                    title: chartData.title
+                });
+            }
+
+            function updatePerformanceView(modelName) {
+                const modelData = appData.models[modelName];
+
+                if (performanceChartInstance) performanceChartInstance.destroy();
+                
+                performanceChartInstance = createChart(performanceCtx, {
+                    type: 'bar',
+                    labels: modelData.metrics.labels,
+                    datasets: modelData.metrics.datasets,
+                    title: `${modelName} Performance Metrics`,
+                });
+                
+                document.getElementById('metricsTitle').innerText = `${modelName} Performance Metrics`;
+                document.getElementById('matrixTitle').innerText = `${modelName} Confusion Matrix`;
+
+                const { tn, fp, fn, tp } = modelData.confusionMatrix;
+                document.getElementById('tn').innerText = tn;
+                document.getElementById('fp').innerText = fp;
+                document.getElementById('fn').innerText = fn;
+                document.getElementById('tp').innerText = tp;
+
+                document.querySelectorAll('.model-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.model === modelName);
+                });
+            }
+            
+            function renderShapChart() {
+                if (shapChartInstance) shapChartInstance.destroy();
+                shapChartInstance = createChart(shapCtx, {
+                    type: 'bar',
+                    labels: appData.shap.labels,
+                    data: appData.shap.data,
+                    backgroundColor: '#A57C52',
+                    title: 'Mean Absolute SHAP Value (Feature Importance)',
+                    indexAxis: 'y',
+                    xLabel: 'Average impact on model output magnitude',
+                });
+            }
+
+            document.getElementById('edaChartSelector').addEventListener('change', (e) => {
+                updateEdaChart(e.target.value);
+            });
+            
+            document.querySelectorAll('.model-btn').forEach(btn => {
+                btn.addEventListener('click', () => updatePerformanceView(btn.dataset.model));
+            });
+
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    
+                    document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+                    document.getElementById(targetId).classList.add('active');
+                    
+                    document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active'));
+                    link.classList.add('active');
+                    
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+
+            updateEdaChart('fraudDistribution');
+            updatePerformanceView('XGBoost');
+            renderShapChart();
+            document.getElementById('overview').classList.add('active');
+
+        });
+    </script>
+</body>
+</html>
