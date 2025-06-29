@@ -1,3 +1,5 @@
+[CLICK HERE FOR WEBPAGE BASED REPORT](https://incelpenguine.github.io/insurance-fraud-detection/)
+
 # Insurance Fraud Detection Model
 
 This project establishes a robust machine learning pipeline designed to detect fraudulent insurance claims. It covers the end-to-end data science lifecycle: from in-depth data preprocessing and feature engineering to advanced modeling techniques, model evaluation with a focus on imbalanced data, and comprehensive explainability using SHAP. The work is consistently framed from a practical business and actuarial perspective, providing actionable insights for real-world insurance operations.
